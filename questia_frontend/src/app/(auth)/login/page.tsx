@@ -9,11 +9,9 @@ import { loginAction, registerAction } from "@/actions/auth";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import { registerFormSchema } from "@/lib/types";
 import { loginFormSchema } from "@/lib/types";
 import { cn } from "@/lib/utils";
-
 
 const page = () => {
   const [email, setEmail] = useState<string>("");
