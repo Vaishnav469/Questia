@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
+
 import { Avatar, AvatarFallback } from "../ui/avatar";
+
 
 import { Button } from "../ui/button";
 
@@ -33,4 +35,6 @@ const Navbar = () => {
   );
 };
 
+
 export default Navbar;
+

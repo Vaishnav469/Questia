@@ -12,7 +12,9 @@ export default function Home() {
             Effortlessly Create, Assign, and Grade Forms with AI Assistance
           </h1>
 
+
           {/* <div className="flex flex-wrap justify-center gap-x-10 gap-y-4">
+
             <div className="flex items-center justify-between gap-x-16 text-pretty rounded-xl border-2 border-[#F1E5FF] bg-[#313030] p-8 text-xl">
               <p className="max-w-[50px]">Forms Created</p>
               <p className="text-4xl font-bold">27</p>
@@ -26,6 +28,7 @@ export default function Home() {
               <p className="text-4xl font-bold">64</p>
             </div>
           </div> */}
+
         </div>
       </div>
     </div>

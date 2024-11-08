@@ -10,3 +10,4 @@ export const registerFormSchema = z.object({
   password: z.string().min(8),
   role: z.enum(["Teacher", "Student"]),
 });
+
