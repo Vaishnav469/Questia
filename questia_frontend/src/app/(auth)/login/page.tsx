@@ -71,7 +71,7 @@ const page = () => {
       if (!response.success) {
         throw new Error("Something went wrong");
       }
-      router.push("/login");
+      setState("login")
     } catch (err) {
       console.error(err);
       if (err instanceof Error) {
@@ -190,14 +190,14 @@ const page = () => {
         {state==="login" ? 
         <div className="pt-2 text-center text-xs text-[#B3B3B3]">
           Don't have an account?{" "}
-          <span className="font-semibold text-white" onClick={()=>{setState("signup")}}>
+          <span className="font-semibold text-white" style={{cursor: "pointer"}} onClick={()=>{setState("signup")}}>
             Register Now
           </span>
         </div>
         :
         <div className="pt-2 text-center text-xs text-[#B3B3B3]">
           Already have an account?{" "}
-          <span className="font-semibold text-white" onClick={()=>{setState("login")}}>
+          <span className="font-semibold text-white" style={{cursor: "pointer"}} onClick={()=>{setState("login")}}>
             Login Now
           </span>
         </div>
