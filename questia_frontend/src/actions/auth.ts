@@ -8,16 +8,16 @@ type Action = {
 };
 
 export async function loginAction(
-  username: string,
+  email: string,
   password: string
 ): Promise<Action> {
   try {
     const cookieStore = await cookies();
 
-    const backendResponse = await fetch("http://python-backend/login", {
+    const backendResponse = await fetch(`${process.env.PYTHON_BACKEND}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ email, password }),
     });
 
     if (!backendResponse.ok) {
@@ -36,6 +36,32 @@ export async function loginAction(
   } catch (error) {
     console.error("Login error:", error);
     return { success: false, error: "Invalid credentials" };
+  }
+}
+
+export async function registerAction(
+  email: string,
+  password: string,
+  role: "Teacher" | "Student"
+): Promise<Action> {
+  try {
+    const backendResponse = await fetch(
+      `${process.env.PYTHON_BACKEND}/register`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, role }),
+      }
+    );
+
+    if (!backendResponse.ok) {
+      throw new Error("Registration failed");
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Registration error:", error);
+    return { success: false, error: "Registration failed" };
   }
 }
 
