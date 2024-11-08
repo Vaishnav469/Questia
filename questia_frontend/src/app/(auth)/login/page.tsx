@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { loginAction } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { formSchema } from "@/lib/types";
+import { loginFormSchema } from "@/lib/types";
 
 const page = () => {
   const [email, setEmail] = useState<string>("");
@@ -18,7 +18,7 @@ const page = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    const result = formSchema.safeParse({ email, password });
+    const result = loginFormSchema.safeParse({ email, password });
 
     if (!result.success) {
       setError(result.error.errors[0].message);
@@ -65,7 +65,7 @@ const page = () => {
             />
           </label>
           <label>
-            Password
+            <span className="pl-1">Password</span>
             <Input
               type="password"
               value={password}
