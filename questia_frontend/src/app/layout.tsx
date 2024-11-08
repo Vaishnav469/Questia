@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Image from "next/image";
 
 import "./globals.css";
 
@@ -29,7 +30,24 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} dark antialiased`}
       >
-        <main className="max-w-full grow">{children}</main>
+        <main className="">
+          <div className="relative min-h-screen">
+            <Image
+              className="absolute bottom-0 left-0 -z-10 h-3/4 w-full"
+              width={100}
+              height={100}
+              src="/bgvec.svg"
+              alt="bg-vector"
+            />
+            <Image
+              className="absolute -z-20 h-auto w-full object-fill"
+              fill
+              src="/circle.png"
+              alt="circle-bg"
+            />
+            {children}
+          </div>
+        </main>
       </body>
     </html>
   );
