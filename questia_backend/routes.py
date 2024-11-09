@@ -4,8 +4,16 @@ from models import Teacher, Student
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_jwt_extended import create_access_token,jwt_required
 from datetime import timedelta
+from cryptography.fernet import Fernet
 
 api = Blueprint('api', __name__)
+
+SECRET_KEY = b'Rk1IU0NKbFJXa2hpRzJ0NUNZYVlNOUU4a2hxR3A4dzY='
+cipher = Fernet(SECRET_KEY)
+
+def decrypt_password(encrypted_password):
+    decrypted_password = cipher.decrypt(encrypted_password.encode())
+    return decrypted_password.decode('utf-8')
 
 # Signup API
 @api.route('/signup', methods=['POST'])
@@ -13,11 +21,18 @@ def signup():
     data = request.get_json()
     
     email = data.get('email')
-    password = data.get('password')
+    encrypted_password = data.get('password')  # Encrypted password from frontend
     role = data.get('role')  # 'teacher' or 'student'
 
-    if not email or not password or not role:
+    if not email or not encrypted_password or not role:
         return jsonify({'msg': 'Missing required fields'}), 400
+    
+    # Decrypt the password
+    try:
+        password = decrypt_password(encrypted_password)
+    except Exception as e:
+        return jsonify({'msg': 'Failed to decrypt password'}), 400
+
     
     # Check if user already exists
     if role == 'teacher':
@@ -56,10 +71,16 @@ def login():
     data = request.get_json()
     
     email = data.get('email')
-    password = data.get('password')
+    encrypted_password = data.get('password')  # Encrypted password from frontend
 
-    if not email or not password:
+    if not email or not encrypted_password:
         return jsonify({'msg': 'Missing email or password'}), 400
+
+    # Decrypt the password
+    try:
+        password = decrypt_password(encrypted_password)
+    except Exception as e:
+        return jsonify({'msg': 'Failed to decrypt password'}), 400
 
     user = Teacher.query.filter_by(email=email).first() or Student.query.filter_by(email=email).first()
     
