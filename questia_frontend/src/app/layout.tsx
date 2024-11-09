@@ -33,17 +33,20 @@ export default function RootLayout({
         <main className="">
           <div className="relative min-h-screen">
             <Image
-              className="absolute bottom-0 left-0 -z-10 h-3/4 w-full"
+              className="fixed bottom-0 left-0 -z-10 h-3/4 w-full"
               width={100}
               height={100}
               src="/bgvec.svg"
               alt="bg-vector"
             />
             <Image
-              className="absolute -z-20 h-auto w-full object-fill"
-              fill
+              className="fixed inset-0 -z-20 h-screen w-full object-cover"
+              fill={false}
+              width={1920}
+              height={1080}
               src="/circle.png"
               alt="circle-bg"
+              priority
             />
             {children}
           </div>
