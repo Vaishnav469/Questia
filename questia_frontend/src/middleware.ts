@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-import { jwtVerify } from "jose";
-
 export async function middleware(params: NextRequest) {}
 
 // export async function middleware(request: NextRequest) {
@@ -13,8 +11,13 @@ export async function middleware(params: NextRequest) {}
 //   }
 
 //   try {
-//     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-//     const { payload } = await jwtVerify(token, secret);
+//     const secret = process.env.JWT_SECRET!;
+//     const { payload } = await jwtVerify(
+//       token,
+//       new TextEncoder().encode(secret)
+//     );
+
+//     // console.log(payload);
 
 //     if (request.nextUrl.pathname === "/dashboard") {
 //       if (payload.role === "student") {

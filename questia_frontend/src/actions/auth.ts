@@ -19,14 +19,15 @@ export async function loginAction(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
+    const response = await backendResponse.json();
 
-    if (!backendResponse.ok) {
-      throw new Error("Login failed");
-    }
+    // if (!response.ok) {
+    //   throw new Error(response.msg ?? "Something went wrong");
+    // }
 
-    const { token } = await backendResponse.json();
+    const { access_token } = response;
 
-    cookieStore.set("auth-token", token, {
+    cookieStore.set("auth-token", access_token, {
       httpOnly: true,
       maxAge: 3600,
       path: "/",
@@ -45,18 +46,21 @@ export async function registerAction(
   role: "Teacher" | "Student"
 ): Promise<Action> {
   try {
+    const lowerCaseRole = role.toLowerCase();
+    console.log(process.env.JWT_SECRET);
     const backendResponse = await fetch(
-      `${process.env.PYTHON_BACKEND}/register`,
+      `${process.env.PYTHON_BACKEND}/signup`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, role }),
+        body: JSON.stringify({ email, password, role: lowerCaseRole }),
       }
     );
+    const response = await backendResponse.json();
 
-    if (!backendResponse.ok) {
-      throw new Error("Registration failed");
-    }
+    // if (!response.ok) {
+    //   throw new Error(response.msg ?? "Something went wrong");
+    // }
 
     return { success: true };
   } catch (error) {
