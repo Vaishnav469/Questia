@@ -33,7 +33,6 @@ const Navbar = () => {
         {/* <Avatar className="cursor-pointer">
           <AvatarFallback>Q</AvatarFallback>
         </Avatar> */}
-        {}
         <div>
           <Button onClick={handleLogout} style={{cursor:"pointer"}} className="font-semibold md:px-7" variant={"project"}>
             Log out

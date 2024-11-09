@@ -83,28 +83,27 @@ def login():
         return jsonify({'msg': 'Invalid credentials'}), 401
 
 
-
-@api.route('/protected', methods=['GET'])
-def protected():
-    return jsonify(message="This is a protected route")
-
 @api.route('/createclassroom', methods=['POST'])
 def create_classroom():
-    data = request.get_json()
-    title = data.get('title')
-    desciption = data.get('description')
-    unique_code = data.get('unique_code')
-    teacher_id = data.get('uid')
-    
-    classroom = Classroom(title=title, desciption=desciption, unique_code=unique_code, teacher_uid=teacher_id)
-    db.session.add(classroom)
-    
-    # Update teacher's classrooms_created array
-    teacher_profile = TeacherProfile.query.get(teacher_id)
-    teacher_profile.classrooms_created.append(classroom.uid)
-    db.session.commit()
-    
-    return jsonify({'msg': 'Classroom created', 'classroom_id': classroom.uid})
+    try:
+        data = request.get_json()
+        title = data.get('title')
+        desciption = data.get('description')
+        unique_code = data.get('unique_code')
+        teacher_id = data.get('uid')
+        
+        classroom = Classroom(title=title, desciption=desciption, unique_code=unique_code, teacher_uid=teacher_id)
+        db.session.add(classroom)
+        
+        # Update teacher's classrooms_created array
+        teacher_profile = TeacherProfile.query.get(teacher_id)
+        teacher_profile.classrooms_created.append(classroom.uid)
+        db.session.commit()
+        
+        return jsonify({'msg': 'Classroom created', 'classroom_id': classroom.uid})
+    except Exception as e: 
+        print(f'Error creating classroom: {e}') 
+        return jsonify({'msg': 'Failed to create classroom', 'error': str(e)}), 500
 
 
 @api.route('/teacher_classrooms', methods=['GET'])

@@ -12,10 +12,10 @@ export const registerFormSchema = z.object({
 });
 
 export type Room = {
-  id: number;
-  name: string;
+  uid: number;
+  title: string;
   description: string;
-  code: string;
+  unique_code: string;
 };
 
 export type QuizRoom = {
