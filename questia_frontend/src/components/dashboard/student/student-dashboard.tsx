@@ -90,7 +90,7 @@ const StudentDashboard = () => {
                     </div>
                     <div className="flex px-12 gap-x-2 pb-5 pt-5">
                         <a href="#" className="text-blue-500" >💡Please read the instructions clearly.</a>
-                        <p> Best of Luck!</p>
+                        <h1> Best of Luck!</h1>
                     </div>
                     
                     <Button
