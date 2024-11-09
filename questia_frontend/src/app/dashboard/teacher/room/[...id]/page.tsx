@@ -1,7 +1,7 @@
 import RoomInterface from "@/components/dashboard/room-interface";
 import { QuizRoom } from "@/lib/types";
 
-const page = async ({ params }: { params: { id: string } }) => {
+const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
 
   const roomData: QuizRoom = {
