@@ -1,12 +1,14 @@
 from flask import Blueprint, request, jsonify
 from app import db
-from models import Teacher, Student
+from models import Teacher, Student,  TeacherProfile, ChildProfile, Classroom, Form, FormAnswer
+from datetime import timedelta
+from encrypt_code import decrypt_password
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_jwt_extended import create_access_token,jwt_required
-from datetime import timedelta
 from cryptography.fernet import Fernet
 
 api = Blueprint('api', __name__)
+
 
 SECRET_KEY = b'Rk1IU0NKbFJXa2hpRzJ0NUNZYVlNOUU4a2hxR3A4dzY='
 cipher = Fernet(SECRET_KEY)
@@ -99,10 +101,14 @@ def login():
 
 
 @api.route('/protected', methods=['GET'])
-@jwt_required()
 def protected():
     return jsonify(message="This is a protected route")
+
+@api.route('/createclassroom', methods=['POST'])
+def create_classroom():
     data = request.get_json()
+    title = data.get('title')
+    desciption = data.get('description')
     unique_code = data.get('unique_code')
     teacher_id = data.get('uid')
     
