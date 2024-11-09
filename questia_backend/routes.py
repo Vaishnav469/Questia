@@ -1,19 +1,82 @@
-from flask import Blueprint, jsonify, request
-from models import User
+from flask import Blueprint, request, jsonify
 from app import db
+from models import Teacher, Student
+from werkzeug.security import check_password_hash, generate_password_hash
+from flask_jwt_extended import create_access_token,jwt_required
+from datetime import timedelta
 
-# Create a Blueprint for the API routes
 api = Blueprint('api', __name__)
 
-@api.route('/users', methods=['GET'])
-def get_users():
-    users = User.query.all()
-    return jsonify([{'id': user.id, 'username': user.username, 'email': user.email} for user in users])
-
-@api.route('/users', methods=['POST'])
-def create_user():
+# Signup API
+@api.route('/signup', methods=['POST'])
+def signup():
     data = request.get_json()
-    new_user = User(username=data['username'], email=data['email'])
-    db.session.add(new_user)
-    db.session.commit()
-    return jsonify({'id': new_user.id, 'username': new_user.username, 'email': new_user.email}), 201
+    
+    email = data.get('email')
+    password = data.get('password')
+    role = data.get('role')  # 'teacher' or 'student'
+
+    if not email or not password or not role:
+        return jsonify({'msg': 'Missing required fields'}), 400
+    
+    # Check if user already exists
+    if role == 'teacher':
+        existing_user = Teacher.query.filter_by(email=email).first()
+        if existing_user:
+            return jsonify({'msg': 'Teacher already exists'}), 400
+        new_user = Teacher(email=email)
+        new_user.set_password(password)
+        db.session.add(new_user)
+        db.session.commit()
+        
+    elif role == 'student':
+        existing_user = Student.query.filter_by(email=email).first()
+        if existing_user:
+            return jsonify({'msg': 'Student already exists'}), 400
+        new_user = Student(email=email)
+        new_user.set_password(password)
+        db.session.add(new_user)
+        db.session.commit()
+        
+    else:
+        return jsonify({'msg': 'Invalid role'}), 400
+
+    # Generate JWT token with the role
+    access_token = create_access_token(identity=email, additional_claims={"role": role}, expires_delta=timedelta(days=1))
+
+    return jsonify({
+        'msg': 'User created successfully'
+       # 'access_token': access_token
+    }), 201
+
+
+# Login API
+@api.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify({'msg': 'Missing email or password'}), 400
+
+    user = Teacher.query.filter_by(email=email).first() or Student.query.filter_by(email=email).first()
+    
+    if user and user.check_password(password):
+        # Generate JWT token
+        role = 'teacher' if isinstance(user, Teacher) else 'student'
+        access_token = create_access_token(identity=email, additional_claims={"role": role}, expires_delta=timedelta(days=1))
+        
+        return jsonify({
+            'msg': 'Login successful',
+            'access_token': access_token
+        }), 200
+    else:
+        return jsonify({'msg': 'Invalid credentials'}), 401
+
+
+@api.route('/protected', methods=['GET'])
+@jwt_required()
+def protected():
+    return jsonify(message="This is a protected route")
