@@ -17,3 +17,18 @@ export type Room = {
   description: string;
   code: string;
 };
+
+export type QuizRoom = {
+  id: number;
+  name: string;
+  description: string;
+  code: string;
+  quizzes: Quiz[];
+};
+
+export type Quiz = {
+  id: number;
+  status: "Live" | "Ended";
+  name: string;
+  description: string;
+};
