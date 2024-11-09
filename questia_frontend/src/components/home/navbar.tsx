@@ -1,10 +1,19 @@
+"use client"
+
 import Image from "next/image";
 import Link from "next/link";
-
+import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
+import { logoutAction } from "@/actions/auth";
 
 const Navbar = () => {
+  const router = useRouter();
+  const handleLogout = async () => { 
+    await logoutAction(); 
+    router.push("/login"); 
+  };
+
   return (
     <header className="p-5">
       <div className="flex items-center justify-between rounded-md border-2 border-[#8E77DB] bg-[#313030] p-3 md:px-7">
@@ -24,9 +33,10 @@ const Navbar = () => {
         {/* <Avatar className="cursor-pointer">
           <AvatarFallback>Q</AvatarFallback>
         </Avatar> */}
+        {}
         <div>
-          <Button className="font-semibold md:px-7" variant={"project"}>
-            <Link href={"/login"}>Log In</Link>
+          <Button onClick={handleLogout} style={{cursor:"pointer"}} className="font-semibold md:px-7" variant={"project"}>
+            Log out
           </Button>
         </div>
       </div>

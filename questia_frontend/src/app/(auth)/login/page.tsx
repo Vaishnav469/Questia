@@ -14,6 +14,7 @@ import { loginFormSchema } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 const page = () => {
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -42,7 +43,7 @@ const page = () => {
       if (!response.success) {
         throw new Error("Something went wrong");
       }
-      router.push("/");
+      router.push("/dashboard");
     } catch (err) {
       console.error(err);
       if (err instanceof Error) {

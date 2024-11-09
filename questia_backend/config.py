@@ -4,6 +4,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
-    SQLALCHEMY_DATABASE_URI = "postgresql://Questia_db_owner:fhKUbL9DP4zT@ep-fragrant-voice-a1xahniy.ap-southeast-1.aws.neon.tech/Questia_db?sslmode=require"
+    SQLALCHEMY_DATABASE_URI = "postgresql://questia_owner:tfSbTFnmK8e4@ep-white-mud-a5t5vpbq.us-east-2.aws.neon.tech/questia?sslmode=require"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    JWT_SECRET_KEY ="rander" # os.getenv('JWT_SECRET_KEY', 'your_jwt_secret_key')
+    JWT_SECRET_KEY ="Rk1IU0NKbFJXa2hpRzJ0NUNZYVlNOUU4a2hxR3A4dzY="

@@ -21,9 +21,9 @@ export async function loginAction(
     });
     const response = await backendResponse.json();
 
-    // if (!response.ok) {
-    //   throw new Error(response.msg ?? "Something went wrong");
-    // }
+    if (!backendResponse.ok) {
+      throw new Error(response.msg ?? "Something went wrong");
+    }
 
     const { access_token } = response;
 
@@ -46,22 +46,21 @@ export async function registerAction(
   role: "Teacher" | "Student"
 ): Promise<Action> {
   try {
-    const lowerCaseRole = role.toLowerCase();
     const backendResponse = await fetch(
       `${process.env.PYTHON_BACKEND}/signup`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, role: lowerCaseRole }),
+        body: JSON.stringify({ email, password, role: role.toLowerCase() }),
       }
     );
     const response = await backendResponse.json();
 
-    // if (!response.ok) {
-    //   throw new Error(response.msg ?? "Something went wrong");
-    // }
-
+    if (!backendResponse.ok) {
+      throw new Error(response.msg ?? "Something went wrong");
+    }
     return { success: true };
+
   } catch (error) {
     console.error("Registration error:", error);
     return { success: false, error: "Registration failed" };
