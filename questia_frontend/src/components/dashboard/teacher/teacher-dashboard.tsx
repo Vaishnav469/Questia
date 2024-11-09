@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import RoomsList from "@/components/rooms-list";
 import { Button } from "@/components/ui/button";
 import { Room } from "@/lib/types";
@@ -69,15 +71,17 @@ const TeacherDashboard = () => {
         <h3 className="text-xl font-semibold">
           View, edit, or delete your created quiz rooms.
         </h3>
-        <Button
-          variant={"project"}
-          size={"lg"}
-          className="mt-5 border-2 border-[#D9D9D9] font-semibold"
-        >
-          Create Room
-        </Button>
+        <Link href="/dashboard/teacher/create-a-room">
+          <Button
+            variant={"project"}
+            size={"lg"}
+            className="mt-5 border-2 border-[#D9D9D9] font-semibold"
+          >
+            Create Room
+          </Button>
+        </Link>
       </div>
-      <RoomsList rooms={rooms} />
+      <RoomsList rooms={rooms} role="Teacher" />
     </div>
   );
 };
