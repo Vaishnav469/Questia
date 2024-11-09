@@ -11,3 +11,9 @@ export const registerFormSchema = z.object({
   role: z.enum(["Teacher", "Student"]),
 });
 
+export type Room = {
+  id: number;
+  name: string;
+  description: string;
+  code: string;
+};
