@@ -47,7 +47,6 @@ export async function registerAction(
 ): Promise<Action> {
   try {
     const lowerCaseRole = role.toLowerCase();
-    console.log(process.env.JWT_SECRET);
     const backendResponse = await fetch(
       `${process.env.PYTHON_BACKEND}/signup`,
       {
