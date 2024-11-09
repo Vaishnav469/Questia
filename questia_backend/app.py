@@ -20,6 +20,10 @@ def create_app():
     
     # Register the API blueprint
     from routes import api
+    from teachers_bot import quiz_bot
+
     app.register_blueprint(api, url_prefix='/api')
+    app.register_blueprint(quiz_bot,url_prefix='/quiz_bot')
+    
 
     return app
