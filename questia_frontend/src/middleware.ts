@@ -3,30 +3,32 @@ import type { NextRequest } from "next/server";
 
 import { jwtVerify } from "jose";
 
-export async function middleware(request: NextRequest) {
-  const token = await request.cookies.get("auth-token")?.value;
+export async function middleware(params: NextRequest) {}
 
-  if (!token) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
+// export async function middleware(request: NextRequest) {
+//   const token = await request.cookies.get("auth-token")?.value;
 
-  try {
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-    const { payload } = await jwtVerify(token, secret);
+//   if (!token) {
+//     return NextResponse.redirect(new URL("/login", request.url));
+//   }
 
-    if (request.nextUrl.pathname === "/dashboard") {
-      if (payload.role === "student") {
-        return NextResponse.rewrite(new URL("/dashboard/student", request.url));
-      } else if (payload.role === "teacher") {
-        return NextResponse.rewrite(new URL("/dashboard/teacher", request.url));
-      }
-    }
+//   try {
+//     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+//     const { payload } = await jwtVerify(token, secret);
 
-    return NextResponse.next();
-  } catch (error) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
-}
+//     if (request.nextUrl.pathname === "/dashboard") {
+//       if (payload.role === "student") {
+//         return NextResponse.rewrite(new URL("/dashboard/student", request.url));
+//       } else if (payload.role === "teacher") {
+//         return NextResponse.rewrite(new URL("/dashboard/teacher", request.url));
+//       }
+//     }
+
+//     return NextResponse.next();
+//   } catch (error) {
+//     return NextResponse.redirect(new URL("/login", request.url));
+//   }
+// }
 
 export const config = {
   matcher: ["/dashboard/:path*"],
