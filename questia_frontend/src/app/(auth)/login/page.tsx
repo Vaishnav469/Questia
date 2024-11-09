@@ -3,10 +3,10 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+
 import { CheckIcon } from "@radix-ui/react-icons";
 
 import { loginAction, registerAction } from "@/actions/auth";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { registerFormSchema } from "@/lib/types";
@@ -18,14 +18,13 @@ const page = () => {
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [role, setRole] = useState<"Teacher" | "Student" | "">("");
-  const [state, setState] = useState("login");
+  const [state, setState] = useState<"login" | "signup">("login");
 
   const router = useRouter();
 
   const handleRoleClick = (role: "Teacher" | "Student") => {
     setRole(role);
   };
-
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,7 +70,7 @@ const page = () => {
       if (!response.success) {
         throw new Error("Something went wrong");
       }
-      setState("login")
+      setState("login");
     } catch (err) {
       console.error(err);
       if (err instanceof Error) {
@@ -84,11 +83,17 @@ const page = () => {
     <div className="flex h-screen items-center justify-center">
       <form
         className="m-5 rounded-xl border-2 border-[#8E77DB] bg-[#313030] px-5 py-10 md:px-16"
-        onSubmit={state==="login" ? handleLogin : handleSignUp}
+        onSubmit={state === "login" ? handleLogin : handleSignUp}
       >
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-[#8E77DB]">Questia</h1>
-          {state === "login" ? <h1 className="py-2 text-xl font-semibold">Yoo! Welcome Back!</h1> : <></>}
+          <h1 className="bg-gradient-to-r from-[#F1E5FF] to-[#8E77DB] bg-clip-text text-2xl font-bold text-transparent">
+            Questia
+          </h1>
+          {state === "login" ? (
+            <h1 className="py-2 text-xl font-semibold">Yoo! Welcome Back!</h1>
+          ) : (
+            <></>
+          )}
           <h3 className="mx-auto max-w-xs text-[#B3B3B3]">
             Smart, Automated Assessments for Educators and Learners
           </h3>
@@ -114,9 +119,9 @@ const page = () => {
             />
           </label>
 
-          {state==="signup" ? <h3>Join as</h3> : <></>}
+          {state === "signup" ? <h3>Join as</h3> : <></>}
 
-          {state==="signup" ? (
+          {state === "signup" ? (
             <div className="flex w-fit max-w-[400px] flex-row gap-x-2">
               <div
                 className={cn(
@@ -177,31 +182,43 @@ const page = () => {
                 </p>
               </div>
             </div>
-          ) : <></>}
+          ) : (
+            <></>
+          )}
         </div>
 
         <h3 className="mt-10 pb-1 text-center text-xs text-red-500">{error}</h3>
 
-        
-
         <Button variant={"project"} className="w-full">
           {state == "login" ? <h3>Back to Home</h3> : <h3>Sign Up</h3>}
         </Button>
-        {state==="login" ? 
-        <div className="pt-2 text-center text-xs text-[#B3B3B3]">
-          Don't have an account?{" "}
-          <span className="font-semibold text-white" style={{cursor: "pointer"}} onClick={()=>{setState("signup")}}>
-            Register Now
-          </span>
-        </div>
-        :
-        <div className="pt-2 text-center text-xs text-[#B3B3B3]">
-          Already have an account?{" "}
-          <span className="font-semibold text-white" style={{cursor: "pointer"}} onClick={()=>{setState("login")}}>
-            Login Now
-          </span>
-        </div>
-        }
+        {state === "login" ? (
+          <div className="pt-2 text-center text-xs text-[#B3B3B3]">
+            Don't have an account?{" "}
+            <span
+              className="font-semibold text-white"
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                setState("signup");
+              }}
+            >
+              Register Now
+            </span>
+          </div>
+        ) : (
+          <div className="pt-2 text-center text-xs text-[#B3B3B3]">
+            Already have an account?{" "}
+            <span
+              className="font-semibold text-white"
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                setState("login");
+              }}
+            >
+              Login Now
+            </span>
+          </div>
+        )}
       </form>
     </div>
   );

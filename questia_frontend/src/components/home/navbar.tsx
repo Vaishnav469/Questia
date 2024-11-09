@@ -1,10 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-
 import { Avatar, AvatarFallback } from "../ui/avatar";
-
-
 import { Button } from "../ui/button";
 
 const Navbar = () => {
@@ -13,7 +10,9 @@ const Navbar = () => {
       <div className="flex items-center justify-between rounded-md border-2 border-[#8E77DB] bg-[#313030] p-3 md:px-7">
         <div className="flex gap-x-2">
           <Image src="/diamond.svg" alt="logo" width={20} height={20} />
-          <h1 className="text-base font-bold md:text-xl">Questia</h1>
+          <h1 className="bg-gradient-to-r from-[#F1E5FF] to-[#8E77DB] bg-clip-text text-base font-bold text-transparent md:text-xl">
+            Questia
+          </h1>
         </div>
         <Image
           className="hidden md:block"
@@ -35,6 +34,4 @@ const Navbar = () => {
   );
 };
 
-
 export default Navbar;
-
