@@ -12,6 +12,7 @@ jwt = JWTManager()
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+    app.config["JWT_SECRET_KEY"] = "Rk1IU0NKbFJXa2hpRzJ0NUNZYVlNOUU4a2hxR3A4dzY="
     
     # Initialize db, migrate, and jwt
     db.init_app(app)

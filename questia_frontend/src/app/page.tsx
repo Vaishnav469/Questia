@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+
 import Navbar from "@/components/home/navbar";
 import { Button } from "@/components/ui/button";
 
@@ -49,7 +50,7 @@ export default function Home() {
             </div>
           </div>
 
-          <Link href="/login">
+          <Link href="/dashboard">
             <Button
               variant={"project"}
               className="mt-5 border-2 border-[#D9D9D9]"
