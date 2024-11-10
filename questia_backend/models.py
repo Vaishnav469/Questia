@@ -48,7 +48,7 @@ class TeacherProfile(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(256), unique=True, nullable=False)
     classrooms_created = db.Column(ARRAY(db.Integer))
-    Forms_created = db.Column(ARRAY(db.Integer))  # Array of classroom UIDs
+    forms_created = db.Column(ARRAY(db.Integer))  # Array of classroom UIDs
 
     def __repr__(self):
         return f'<TeacherProfile {self.email}>'

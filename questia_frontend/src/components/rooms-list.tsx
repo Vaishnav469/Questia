@@ -35,7 +35,7 @@ const RoomItem = ({
 }) => {
   return (
     <div>
-      <Link href={`/dashboard/teacher/${role}/${room.uid}`}>
+      <Link href={`/dashboard/${role}/room/${room.uid}`}>
         <div className="flex w-full rounded-2xl border-2 border-[#8E77DB] bg-[#F1E5FF] p-2">
           <div className="flex w-full flex-col gap-y-4 p-4 text-[#878787] sm:flex-row sm:items-center sm:gap-x-10">
             <div className="grow">

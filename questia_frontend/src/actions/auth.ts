@@ -14,7 +14,7 @@ export async function loginAction(
   try {
     const cookieStore = await cookies();
 
-    const backendResponse = await fetch(`${process.env.PYTHON_BACKEND}/login`, {
+    const backendResponse = await fetch(`http://192.168.70.47:8000/api/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -47,7 +47,7 @@ export async function registerAction(
 ): Promise<Action> {
   try {
     const backendResponse = await fetch(
-      `${process.env.PYTHON_BACKEND}/signup`,
+      `http://192.168.70.47:8000/api/signup`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
