@@ -6,7 +6,7 @@ quiz_bot = Blueprint('quiz_bot', __name__)
 
 
 # Configure API key for Google Generative AI
-api_key = 'AIzaSyA98mIGKOinKRCp_76aj8G1YKTr3zJWZfU'
+api_key = ''
 genai.configure(api_key=api_key)
 
 # Create the model
