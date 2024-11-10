@@ -3,6 +3,8 @@
 import { useState } from "react";
 
 import Backdrop from "@/components/backdrop";
+import { useEffect } from "react";
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -11,20 +13,70 @@ const page = () => {
   const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">(
     "easy"
   );
+  const router = useRouter(); 
+  const searchParams = useSearchParams();
+  const [topic, setTopic] = useState<string>("");
+  const [numQuestions, setNumQuestions] = useState<number>(5);
+  const [response, setResponse] = useState<{ questions: { question: string; options: string[]; answer: string; type: string; }[] } | null>(null);
+  const [teacherUid, setTeacherUid] = useState<string | null>(null);
+  const [title, setTitle] = useState<string>("Quiz Title");
+
+  useEffect(() => {
+    const uid = searchParams.get('teacherUid'); 
+    setTeacherUid(uid);
+  }, []);
+
+  const handleGenerate = async () => { 
+    try { 
+      const res = await fetch("http://192.168.70.47:8000/quiz/generate_quiz", { 
+        method: "POST", headers: { 
+          "Content-Type": "application/json", 
+        }, body: JSON.stringify({ message: `Generate ${numQuestions} ${difficulty} questions on ${topic}` }), 
+      }); 
+      
+      if (!res.ok) { 
+        throw new Error("Failed to generate quiz"); 
+      } 
+      
+      const data = await res.json(); 
+      const parsedResponse = JSON.parse(data.response);
+      
+      setResponse(parsedResponse); 
+    } catch (error) { 
+      console.error("Error generating quiz:", error); 
+    } 
+  };
+
+  const handleSubmit = async () => { 
+    if (!response) return; 
+
+
+    try { 
+      const res = await fetch("http://192.168.70.47:8000/api/create_form", { 
+        method: "POST", headers: { 
+          "Content-Type": "application/json", 
+        }, body: JSON.stringify({ teacher_uid: teacherUid, title: title, questions: response.questions, }), 
+      }); 
+      
+      if (!res.ok) { 
+        throw new Error("Failed to create form"); 
+      } 
+      
+      const data = await res.json(); 
+      console.log("Form created:", data.form_id); 
+      router.push(`/dashboard/teacher/forms-list?teacherUid=${teacherUid}`); 
+    } catch (error) { 
+      console.error("Error creating form:", error); 
+    } 
+  };
 
   return (
     <div>
       <Backdrop>
-        <h1 className="text-3xl font-bold">History Quiz</h1>
-        <p className="max-w-md">
-          Test your knowledge on ancient civilizations, exploring key events,
-          cultures, and achievements from early human history
-        </p>
-
         <div>
           <p className="py-5">AI - Generated Questions</p>
           <div className="relative">
-            <Input placeholder="Enter Topic or Keywords" />
+            <Input placeholder="Enter Topic or Keywords" value={topic} onChange={(e) => setTopic(e.target.value)}/>
             <div className="absolute right-0 top-1/2 mr-2 flex -translate-y-1/2 gap-x-2 bg-[#313030]">
               <button
                 className={cn(
@@ -58,9 +110,13 @@ const page = () => {
           <div className="flex flex-wrap items-center justify-between gap-x-5 gap-y-2 pt-5">
             <div className="flex flex-wrap items-center gap-x-2">
               <h3>Number of Questions</h3>
-              <Input className="w-20" />
+              <Input className="w-20" 
+              type="number" 
+              value={numQuestions} 
+              onChange={(e) => setNumQuestions(Number(e.target.value))} 
+              />
             </div>
-            <Button variant={"project"} size={"lg"}>
+            <Button variant={"project"} size={"lg"} onClick={handleGenerate}>
               Generate{" "}
               <svg
                 width="24"
@@ -76,6 +132,18 @@ const page = () => {
               </svg>
             </Button>
           </div>
+            {response && ( <div className="pt-5"> <h3>Questions:</h3> 
+            <ul> {response.questions.map((q, index) => ( 
+              <li key={index}> 
+                <p>Q: {q.question}</p> 
+                <ul> 
+                  {q.options && q.options.map((option, idx) => ( <li key={idx}>{option}</li> ))} 
+                </ul> 
+              </li> 
+              ))} 
+            </ul> 
+            <Button variant={"project"} size={"lg"} onClick={handleSubmit}> Submit to Create Form </Button>
+          </div> )}
         </div>
       </Backdrop>
     </div>

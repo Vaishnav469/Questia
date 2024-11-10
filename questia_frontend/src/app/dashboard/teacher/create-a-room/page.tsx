@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import { createClassroom } from "@/apiService";
 
 const page = () => {
   const router = useRouter(); 
+  const searchParams = useSearchParams();
   const [code, setCode] = useState<string>("");
   const [copied, setCopied] = useState<boolean>(false);
   const [roomName, setRoomName] = useState<string>("");
@@ -18,8 +19,7 @@ const page = () => {
 
   useEffect(() => {
     setCode(generateRandomString(6));
-    const urlParams = new URLSearchParams(window.location.search); 
-    const uid = urlParams.get('teacherUid'); 
+    const uid = searchParams.get('teacherUid'); 
     setTeacherUid(uid);
   }, []);
 

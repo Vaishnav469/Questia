@@ -18,6 +18,13 @@ export type Room = {
   unique_code: string;
 };
 
+export type Form = {
+  uid: number;
+  title: string;
+  description: string;
+  unique_code: string;
+};
+
 export type QuizRoom = {
   id: number;
   name: string;
