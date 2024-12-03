@@ -21,16 +21,31 @@ export type Room = {
 export type Form = {
   uid: number;
   title: string;
-  description: string;
-  unique_code: string;
+  Questions: any;
 };
 
-export type QuizRoom = {
-  id: number;
-  name: string;
-  description: string;
-  code: string;
-  quizzes: Quiz[];
+
+export type Student = { 
+  uid?: string; 
+  email: string; 
+}; 
+
+export type Classroom = { 
+  uid: string; 
+  title: string; 
+  unique_code: string; 
+  description: string; 
+}; 
+
+export type ClassData = { 
+  classroom: Classroom; 
+  students: Student[]; 
+};
+
+
+export type FormData = { 
+  form: Form; 
+  students: Student[]; 
 };
 
 export type Quiz = {
@@ -39,3 +54,9 @@ export type Quiz = {
   name: string;
   description: string;
 };
+
+export type SideNavItem= {
+  title: string;
+  path?: string;
+  icon?: JSX.Element;
+}

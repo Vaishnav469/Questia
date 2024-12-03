@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { registerFormSchema } from "@/lib/types";
 import { loginFormSchema } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { ThreeDots } from 'react-loader-spinner'
 
 const page = () => {
 
@@ -20,6 +21,7 @@ const page = () => {
   const [error, setError] = useState<string>("");
   const [role, setRole] = useState<"Teacher" | "Student" | "">("");
   const [state, setState] = useState<"login" | "signup">("login");
+  const [loading, setloading] = useState(false)
 
   const router = useRouter();
 
@@ -28,11 +30,13 @@ const page = () => {
   };
 
   const handleLogin = async (e: React.FormEvent) => {
+    setloading(true);
     e.preventDefault();
     setError("");
     const result = loginFormSchema.safeParse({ email, password });
 
     if (!result.success) {
+      setloading(false)
       setError(result.error.errors[0].message);
       return;
     }
@@ -41,6 +45,7 @@ const page = () => {
       const response = await loginAction(email, password);
 
       if (!response.success) {
+        setloading(false)
         throw new Error("Something went wrong");
       }
       router.push("/dashboard");
@@ -49,10 +54,13 @@ const page = () => {
       if (err instanceof Error) {
         setError(err.message);
       }
+    } finally {
+      setloading(false)
     }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
+    setloading(true);
     e.preventDefault();
     setError("");
     const result = registerFormSchema.safeParse({ email, password, role });
@@ -64,11 +72,13 @@ const page = () => {
 
     try {
       if (!role) {
+        setloading(false)
         throw new Error("Please select a role");
       }
       const response = await registerAction(email, password, role);
 
       if (!response.success) {
+        setloading(false)
         throw new Error("Something went wrong");
       }
       setState("login");
@@ -77,6 +87,8 @@ const page = () => {
       if (err instanceof Error) {
         setError(err.message);
       }
+    } finally {
+      setloading(false);
     }
   };
 
@@ -190,9 +202,14 @@ const page = () => {
 
         <h3 className="mt-10 pb-1 text-center text-xs text-red-500">{error}</h3>
 
-        <Button variant={"project"} className="w-full">
-          {state == "login" ? <h3>Back to Home</h3> : <h3>Sign Up</h3>}
-        </Button>
+        {loading ? ( 
+          <div className="flex justify-center">
+            <ThreeDots width="50" height="50" radius = "9" color="yellow" />
+          </div>) :
+          (<Button variant={"project"} className="w-full">
+            {state == "login" ? <h3>Back to Home</h3> : <h3>Sign Up</h3>}
+          </Button>)
+        }
         {state === "login" ? (
           <div className="pt-2 text-center text-xs text-[#B3B3B3]">
             Don't have an account?{" "}

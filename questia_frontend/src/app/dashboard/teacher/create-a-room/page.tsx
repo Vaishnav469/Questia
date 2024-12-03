@@ -66,7 +66,7 @@ const page = () => {
           </p>
 
           <Input
-            placeholder="Enter CLassroom name (e.g., 'Grade 2A')"
+            placeholder="Enter Classroom name (e.g., 'Grade 2A')"
             className="py-1"
             value={roomName}
             onChange={(e) => setRoomName(e.target.value)}

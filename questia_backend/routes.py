@@ -5,6 +5,7 @@ from models import Teacher, Student, TeacherProfile, ChildProfile, Classroom, Fo
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import timedelta
+import json
 
 def register_routes(app):
     @app.route('/api/teacher-classrooms',  methods=['GET'])
@@ -12,7 +13,7 @@ def register_routes(app):
         teacher_uid = request.args.get('teacher_uid')
         
         classrooms = Classroom.query.filter_by(teacher_uid=teacher_uid).all()
-        return jsonify([{'uid': classroom.uid, 'title': classroom.title, 'unique_code': classroom.unique_code} for classroom in classrooms]), 200
+        return jsonify([{'uid': classroom.uid, 'title': classroom.title, 'unique_code': classroom.unique_code, 'description' : classroom.description} for classroom in classrooms]), 200
 
 
     @app.route('/api/teacher-forms',  methods=['GET'])
@@ -114,11 +115,16 @@ def register_routes(app):
             db.session.add(classroom)
             db.session.commit()
 
-            teacher_profile.classrooms_created.append(classroom.uid)
-            db.session.commit()
-            
-            
-            return jsonify({'msg': 'Classroom created', 'classroom_id': classroom.uid})
+            classroom_created_set = set(teacher_profile.classrooms_created)
+
+            if classroom.uid not in classroom_created_set:
+                # Assign a new list to ensure SQLAlchemy tracks the change
+                classroom_created_set.add(classroom.uid)
+                teacher_profile.classrooms_created = list(classroom_created_set)
+                db.session.commit()
+                return jsonify({'msg': 'Access to form granted', 'form_uid': classroom.uid}), 200
+            else:
+                return jsonify({'msg': 'Form already has access to classroom'}), 200
         except Exception as e: 
             print(f'Error creating classroom: {e}') 
             return jsonify({'msg': 'Failed to create classroom', 'error': str(e)}), 500
@@ -130,17 +136,39 @@ def register_routes(app):
         student_uid = data.get('student_uid')
         
         classroom = Classroom.query.filter_by(unique_code=code).first()
+        childProfile = ChildProfile.query.filter_by(uid=student_uid).first()
+
         if not classroom:
             return jsonify({'msg': 'Classroom not found'}), 404
         
-        # Add classroom to student’s profile
-        classroom.children_access.append(student_uid)
+        if not childProfile: 
+            return jsonify({'msg': 'Student profile not found'}), 404
         
-        # Add student to classroom's children_access
-        classroom.children_access.append(student_uid)
-        db.session.commit()
+        if classroom.children_access is None: 
+                classroom.children_access = []
+                db.session.commit()
         
-        return jsonify({'msg': 'Classroom joined successfully'})
+        if childProfile.classrooms_access is None:
+                childProfile.classrooms_access = []
+                db.session.commit()
+
+        classroom_children_set = set(classroom.children_access)
+        student_classrooms_set = set(childProfile.classrooms_access)
+
+        if classroom.uid not in student_classrooms_set:
+            # Assign a new list to ensure SQLAlchemy tracks the change
+            student_classrooms_set.add(classroom.uid)
+            childProfile.classrooms_access = list(student_classrooms_set)
+            db.session.commit()
+
+        if student_uid not in classroom_children_set:
+            # Assign a new list to ensure SQLAlchemy tracks the change
+            classroom_children_set.add(student_uid)
+            classroom.children_access = list(classroom_children_set)
+            db.session.commit()
+            return jsonify({'msg': 'Student added to classroom'}), 200
+
+        return jsonify({'msg': 'Student already in classroom'}), 200
 
     @app.route('/api/student_classrooms', methods=['GET'])
     def view_student_classrooms():
@@ -150,7 +178,9 @@ def register_routes(app):
         
         return jsonify([{
             'uid': classroom.uid,
-            'title': classroom.title
+            'title': classroom.title,
+            'unique_code': classroom.unique_code, 
+            'description' : classroom.description
         } for classroom in classrooms]), 200
 
     @app.route('/api/create_form', methods=['POST'])
@@ -174,8 +204,16 @@ def register_routes(app):
             teacher_profile.forms_created.append(form.uid)
             db.session.commit()
 
+        teacher_profile_forms = set(teacher_profile.forms_created)
 
-        return jsonify({'msg': 'Form created', 'form_id': form.uid}), 200
+        if form.uid not in teacher_profile_forms:
+            # Assign a new list to ensure SQLAlchemy tracks the change
+            teacher_profile_forms.add(form.uid) 
+            teacher_profile.forms_created = list(teacher_profile_forms)
+            db.session.commit()
+            return jsonify({'msg': 'Access to form granted', 'form_uid': form.uid}), 200
+        
+        return jsonify({'msg': 'Form already has access to classroom'}), 200
 
     @app.route('/api/give_access_to_form', methods=['POST'])
     def give_access_to_form():
@@ -191,12 +229,18 @@ def register_routes(app):
         
         if  classroom.form_uids is None: 
              classroom.form_uids = []
-        db.session.commit()
+             db.session.commit()
 
-        classroom.form_uids.append(form_uid)
-        db.session.commit()
+        clasroom_uids = set(classroom.form_uids)
 
-        return jsonify({'msg': 'Access to form granted', 'form_uid': form_uid}), 200
+        if form_uid not in clasroom_uids:
+            # Assign a new list to ensure SQLAlchemy tracks the change
+            clasroom_uids.add(form_uid)
+            classroom.form_uids = list(clasroom_uids)
+            db.session.commit()
+            return jsonify({'msg': 'Access to form granted', 'form_uid': form_uid}), 200
+
+        return jsonify({'msg': 'Form already has access to classroom'}), 200
 
     @app.route('/api/classroom_forms', methods=['GET'])
     def classroom_forms():
@@ -263,5 +307,123 @@ def register_routes(app):
         ]
 
         return jsonify(response), 200
+    
+    @app.route('/api/classroom/students', methods=['GET'])
+    def get_classroom_students():
+        # Retrieve the classroom by its unique ID
+        classroom_uid = request.args.get('classroom_uid')
+        classroom = Classroom.query.get(classroom_uid)
+
+        # Check if the classroom exists
+        if not classroom:
+            return jsonify({'msg': 'Classroom not found'}), 404
+
+        # Check if there are children with access to the classroom
+        if not classroom.children_access:
+            return jsonify({
+                'classroom': {
+                    'uid': classroom.uid,
+                    'title': classroom.title,
+                    'unique_code': classroom.unique_code,
+                    'description': classroom.description  # optional description field
+                },
+                'students': []  # Empty list if no students are in the classroom
+            }), 200
+
+        # Query for emails of all child profiles with UIDs in the children_access list
+        
+        student_info = ChildProfile.query.filter(ChildProfile.uid.in_(classroom.children_access)).all()
+
+        students = [{'uid': student.uid, 'email': student.email} for student in student_info]
+
+        print(classroom.uid, classroom.title, classroom.description, classroom.unique_code)
+
+        return jsonify({
+            'classroom': {
+                'uid': classroom.uid,
+                'title': classroom.title,
+                'unique_code': classroom.unique_code,
+                'description': classroom.description  # optional description field
+            },
+            'students': students
+        }), 200
+    
+    @app.route('/api/form', methods=['GET'])
+    def get_form_data():
+        # Retrieve the form by its unique ID
+        form_uid = request.args.get('form_uid')
+        form = Form.query.get(form_uid)
+
+        # Check if the form exists
+        if not form:
+            return jsonify({'msg': 'Form not found'}), 404
+
+        # Check if the form was attempted by any students
+        if not form.attempted_students:
+            return jsonify({
+                'form': {
+                    'uid': form.uid,
+                    'title': form.title,
+                    'Questions': form.questions
+                },
+                'students': []  # Empty list if no students are in the classroom
+            }), 200
+
+        # Query for emails of all child profiles with UIDs in the children_access list
+        student_info = ChildProfile.query.filter(ChildProfile.uid.in_(form.attempted_students)).all()
+
+        students = [{'uid': student.uid, 'email': student.email} for student in student_info]
+
+        print(form.uid, form.title, form.questions)
+
+        return jsonify({
+            'form': {
+                'uid': form.uid,
+                'title': form.title,
+                'Questions': form.questions
+            },
+            'students': students
+        }), 200
+
+    @app.route('/api/get_student_forms', methods=['GET'])
+    def get_forms_status():
+        classroom_uid = request.args.get('classroomUid')
+        student_uid = request.args.get('studentUid')
+
+        if not classroom_uid or not student_uid:
+            return jsonify({'msg': 'Classroom UID or Student UID missing'}), 400
+
+        # Fetch classroom and validate
+        classroom = Classroom.query.filter_by(uid=classroom_uid).first()
+        if not classroom:
+            return jsonify({'msg': 'Classroom not found'}), 404
+
+        # Fetch all forms for the classroom
+        form_uids = classroom.form_uids or []
+        forms = Form.query.filter(Form.uid.in_(form_uids)).all()
+
+        attempted_forms = []
+        pending_forms = []
+
+        for form in forms:
+            # Check if the student UID exists in the form's attempted students
+            if student_uid in (form.attempted_students or []):
+                attempted_forms.append({
+                    'uid': form.uid,
+                    'title': form.title,
+                })
+            else:
+                pending_forms.append({
+                    'uid': form.uid,
+                    'title': form.title,
+                })
+
+        return jsonify({
+            'attempted_forms': attempted_forms,
+            'pending_forms': pending_forms
+        }), 200
+
+
+
 
 
