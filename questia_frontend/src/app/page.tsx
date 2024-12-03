@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <div className="relative">
       <Image
-        src={"/landingbg.png"}
+        src={"/landingbg.jpg"}
         alt="bg"
         width={1920}
         height={1080}
@@ -21,12 +21,12 @@ export default function Home() {
             Questia
           </h1>
 
-          <h1 className="max-w-xl pt-5 text-3xl font-bold">
+          <h1 className="max-w-xl text-black pt-5 text-3xl font-bold">
             Your Personalized Learning & Quiz Platform
           </h1>
 
-          <p className="max-w-2xl">
-            a platform designed to make learning interactive, engaging, and
+          <p className="max-w-2xl text-black">
+            A platform designed to make learning interactive, engaging, and
             impactful. Here, you'll have access to quizzes that challenge your
             knowledge, help reinforce what you've learned, and give you instant
             feedback to boost your understanding.

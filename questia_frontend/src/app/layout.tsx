@@ -31,23 +31,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} dark antialiased`}
       >
         <main className="">
-          <div className="relative min-h-screen">
-            <Image
-              className="fixed bottom-0 left-0 -z-10 h-3/4 w-full"
-              width={100}
-              height={100}
-              src="/bgvec.svg"
-              alt="bg-vector"
-            />
-            <Image
-              className="fixed inset-0 -z-20 h-screen w-full object-cover"
-              fill={false}
-              width={1920}
-              height={1080}
-              src="/circle.png"
-              alt="circle-bg"
-              priority
-            />
+          <div className="relative min-h-screen bg-[#F5F5F5] " style={{ maxHeight: '100vh', overflowY: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
+            
             {children}
           </div>
         </main>

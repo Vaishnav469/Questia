@@ -2,6 +2,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { jwtVerify } from "jose";
+
 import StudentDashboard from "@/components/dashboard/student/student-dashboard";
 
 const page = async () => {
@@ -15,12 +16,12 @@ const page = async () => {
     const decodedToken = await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET));
 
     if (decodedToken.payload.role !== "student") {
-      redirect("/dashboard/teacher");
+      redirect("/login");
     }
 
     return (
-      <div>
-        <StudentDashboard/>
+      <div className="p-4">
+        <StudentDashboard studentUid={decodedToken.payload.uid}/>
       </div>
      
     );

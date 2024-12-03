@@ -13,7 +13,7 @@ const FormsList = ({
   teacherUid,
 }: {
   forms: Form[];
-  role: "Teacher" | "Student";
+  role: "teacher" | "student";
   teacherUid: string;
 }) => {
   return (
@@ -35,7 +35,7 @@ const FormItem = ({
   teacherUid,
 }: {
   form: Form;
-  role: "Teacher" | "Student";
+  role: "teacher" | "student";
   teacherUid: string;
 }) => {
   const [classrooms, setClassrooms] = useState<{ uid: string; title: string }[]>([]); 
@@ -77,7 +77,7 @@ const FormItem = ({
         <div className="flex w-full rounded-2xl border-2 border-[#8E77DB] bg-[#F1E5FF] p-2">
           <div className="flex w-full flex-col gap-y-4 p-4 text-[#878787] sm:flex-row sm:items-center sm:gap-x-10">
             <div className="grow">
-              <Link href="#">
+              <Link href={`/dashboard/${role}/form?formUid=${form.uid}`}>
               <div className="flex flex-wrap items-center gap-2 sm:gap-x-5">
                 <h1 className="truncate text-xl font-bold text-[#8638E5] sm:text-2xl">
                   {form.title}
@@ -85,7 +85,7 @@ const FormItem = ({
               </div>
               </Link>
             </div>
-            {role === "Teacher" && (
+            {role === "teacher" && (
               <div className="flex gap-x-5">
                 <TrashIcon className="h-5 w-5 cursor-pointer sm:h-6 sm:w-6" />
                 <Pencil1Icon className="h-5 w-5 cursor-pointer sm:h-6 sm:w-6" />
