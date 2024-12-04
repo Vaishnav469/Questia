@@ -50,7 +50,7 @@ const ClassroomForms = () => {
                 PENDING FORMS
             </h1>
             {pendingforms && pendingforms.map((form) => (
-                <div className="flex w-full rounded-2xl border-2 border-[#8E77DB] bg-[#F1E5FF] p-2">
+                <div key={form.uid} className="flex w-full rounded-2xl border-2 border-[#8E77DB] bg-[#F1E5FF] p-2">
                     <div className="flex w-full flex-col gap-y-4 p-4 text-[#878787] sm:flex-row sm:items-center sm:gap-x-10">
                         <div className="grow">
                             <Link href={`/dashboard/student/quiz-answer?formUid=${form.uid}`}>
@@ -69,7 +69,7 @@ const ClassroomForms = () => {
                 ATTEMPTED FORMS
             </h1>
             {attemptedforms && attemptedforms.map((form) => (
-                <div className="flex w-full rounded-2xl border-2 border-[#8E77DB] bg-[#F1E5FF] p-2">
+                <div key={form.uid} className="flex w-full rounded-2xl border-2 border-[#8E77DB] bg-[#F1E5FF] p-2">
                     <div className="flex w-full flex-col gap-y-4 p-4 text-[#878787] sm:flex-row sm:items-center sm:gap-x-10">
                         <div className="grow">
                             <Link href={`/dashboard/student/quiz-feedback?formUid=${form.uid}`}>
