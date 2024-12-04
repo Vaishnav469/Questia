@@ -1,12 +1,13 @@
 import os
 import google.generativeai as genai
 from flask import Blueprint, request, jsonify
+import json
 
 quiz_bot = Blueprint('quiz_bot', __name__)
 
 
 # Configure API key for Google Generative AI
-api_key = ''
+api_key = 'AIzaSyA98mIGKOinKRCp_76aj8G1YKTr3zJWZfU'
 genai.configure(api_key=api_key)
 
 # Create the model
@@ -21,7 +22,17 @@ generation_config = {
 model = genai.GenerativeModel(
   model_name="gemini-1.5-pro",
   generation_config=generation_config,
-  system_instruction="Assist the teacher in conducting quizzes for students. When the teacher requests questions on a specific topic, generate questions based on their requirements. Ask the teacher if he does not provide:\n\nHow many questions they need.\nThe number of multiple-choice questions (MCQs) and subjective questions.\nThe students' grade level.\nThe desired difficulty level.",
+  system_instruction="""
+  Assist the teacher in conducting quizzes for students. When the teacher requests questions on a specific topic, generate questions based on their requirements. Ask the teacher if he does not provide:
+  - How many questions they need.
+  - The number of multiple-choice questions (MCQs) and subjective questions.
+  - The students' grade level.
+  - The desired difficulty level.
+  
+  Additionally, provide constructive feedback for students' answers. When given a JSON file with a list of questions, correct answers (if applicable), and students' answers, analyze each question and provide feedback. For correct answers, explain why the answer is correct. For incorrect answers, offer constructive feedback on where the student went wrong and how to improve. For subjective questions, analyze the student's response and provide feedback accordingly.
+  
+  Return the feedback in the same JSON format, adding a 'feedback' field to each question.
+  """,
 )
 
 chat_session = model.start_chat(
@@ -43,3 +54,24 @@ def generate_quiz():
     
     # Return the response as JSON
     return jsonify({'response': response.text})
+
+@quiz_bot.route('/provide_feedback', methods=['POST']) 
+def provide_feedback(): 
+  data = request.get_json() 
+  questions = data.get('questions') 
+
+  feedback_message = f""" 
+  Here is a JSON file containing quiz questions, correct answers (if applicable), and students' answers. For each question, analyze the student's response and provide feedback, adding a 'feedback' key to each question. 
+  
+  {questions} 
+  """
+
+  response = chat_session.send_message(feedback_message)
+  updated_questions_json = response.text
+
+  try: 
+    updated_questions = json.loads(updated_questions_json) 
+  except json.JSONDecodeError: 
+    return jsonify({'error': 'Invalid JSON response from AI'}), 500
+
+  return jsonify({'questions': updated_questions})

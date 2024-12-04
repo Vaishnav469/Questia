@@ -6,6 +6,8 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import timedelta
 import json
+from sqlalchemy.sql.expression import any_
+import requests
 
 def register_routes(app):
     @app.route('/api/teacher-classrooms',  methods=['GET'])
@@ -155,12 +157,15 @@ def register_routes(app):
         classroom_children_set = set(classroom.children_access)
         student_classrooms_set = set(childProfile.classrooms_access)
 
+    
         if classroom.uid not in student_classrooms_set:
             # Assign a new list to ensure SQLAlchemy tracks the change
             student_classrooms_set.add(classroom.uid)
             childProfile.classrooms_access = list(student_classrooms_set)
             db.session.commit()
 
+
+        student_uid = int(student_uid)
         if student_uid not in classroom_children_set:
             # Assign a new list to ensure SQLAlchemy tracks the change
             classroom_children_set.add(student_uid)
@@ -195,7 +200,7 @@ def register_routes(app):
         if teacher_profile.forms_created is None: 
             teacher_profile.forms_created = []
         
-        form = Form(title=title, teacher_uid=teacher_uid, questions=questions)
+        form = Form(title=title, teacher_uid=teacher_uid, questions=questions, attempted_students=[])
         db.session.add(form)
         db.session.commit()
 
@@ -233,6 +238,8 @@ def register_routes(app):
 
         clasroom_uids = set(classroom.form_uids)
 
+        form_uid = int(form_uid)
+
         if form_uid not in clasroom_uids:
             # Assign a new list to ensure SQLAlchemy tracks the change
             clasroom_uids.add(form_uid)
@@ -255,33 +262,55 @@ def register_routes(app):
             'attempted': form.attempted_students
         } for form in forms]), 200
 
+    FEEDBACK_SERVICE_URL = 'http://192.168.70.47:8000/quiz/provide_feedback'
 
     @app.route('/api/submit_form_answers', methods=['POST'])
     def submit_form_answers():
-        data = request.get_json()
-        student_uid = data.get('student_uid')  # UID passed from frontend
-        form_uid = data.get('form_uid')
-        questions = Form.query.get(form_uid).questions
-        answers = data.get('answers')
-        feedback = data.get('feedback')
+        try:
+            data = request.get_json()
+            student_uid = request.args.get('student_uid')  # UID passed from frontend
+            form_uid = request.args.get('form_uid')
+            questions = data.get('Questions')
+            print(questions)
 
-        form_answer = FormAnswer(
-            form_id=form_uid,
-            student_uid=student_uid,
-            questions=questions,
-            answers=answers,
-            feedback=feedback
-        )
-        db.session.add(form_answer)
-        db.session.commit()
+            if not form_uid or not student_uid or not questions:
+                return jsonify({"message": "Invalid data provided."}), 400
+            
+            feedback_payload = {'questions': questions}
+            feedback_response = requests.post(FEEDBACK_SERVICE_URL, json=feedback_payload)
 
-        # Update form record to show this student attempted
-        form = Form.query.get(form_uid)
-        if form:
-            form.attempted_students.append(student_uid)
+            if feedback_response.status_code != 200:
+                return jsonify({"message": "Failed to generate feedback."}), 500
+            
+            feedback_data = feedback_response.json()
+            updated_questions = feedback_data.get('questions')
+
+            print(updated_questions)
+            form_answer = FormAnswer(
+                form_uid=form_uid,
+                student_uid=student_uid,
+                questions=updated_questions,
+            )
+            db.session.add(form_answer)
             db.session.commit()
 
-        return jsonify({'msg': 'Form answers submitted successfully'}), 201
+            # Update form record to show this student attempted
+            form = Form.query.get(form_uid)
+            if form:
+                attempted_students = form.attempted_students or []
+                student_uid = int(student_uid)
+
+                if student_uid not in attempted_students:
+                    attempted_students.append(student_uid)
+                    form.attempted_students = attempted_students
+                    db.session.commit()
+
+                print(f"After Update - Form UID {form_uid}, Attempted Students: {form.attempted_students}")
+
+            return jsonify({'msg': 'Form answers submitted successfully'}), 201
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"message": "An error occurred while submitting the form."}), 500
 
 
     @app.route('/api/get_form_answers', methods=['GET'])
@@ -407,23 +436,41 @@ def register_routes(app):
 
         for form in forms:
             # Check if the student UID exists in the form's attempted students
-            if student_uid in (form.attempted_students or []):
-                attempted_forms.append({
-                    'uid': form.uid,
-                    'title': form.title,
-                })
-            else:
+            attempted_students = form.attempted_students or [] 
+            student_uid = int(student_uid)
+
+            if student_uid not in attempted_students:
                 pending_forms.append({
                     'uid': form.uid,
                     'title': form.title,
                 })
-
+            else:
+                attempted_forms.append({
+                    'uid': form.uid,
+                    'title': form.title,
+                })
         return jsonify({
             'attempted_forms': attempted_forms,
             'pending_forms': pending_forms
         }), 200
 
 
+    @app.route('/api/student_form', methods=['GET'])
+    def get_form_():
+        # Retrieve the form by its unique ID
+        form_uid = request.args.get('form_uid')
+        form = Form.query.get(form_uid)
+
+        # Check if the form exists
+        if not form:
+            return jsonify({'msg': 'Form not found'}), 404
+
+       
+        return jsonify({
+            'uid': form.uid,
+            'title': form.title,
+            'Questions': form.questions
+        }), 200
 
 
 
