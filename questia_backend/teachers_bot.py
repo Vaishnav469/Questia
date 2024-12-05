@@ -5,10 +5,10 @@ import json
 
 quiz_bot = Blueprint('quiz_bot', __name__)
 
+API_KEY = os.environ.get('GEMINI_API_KEY')
 
 # Configure API key for Google Generative AI
-api_key = 'AIzaSyA98mIGKOinKRCp_76aj8G1YKTr3zJWZfU'
-genai.configure(api_key=api_key)
+genai.configure(api_key=API_KEY)
 
 # Create the model
 generation_config = {
@@ -28,6 +28,7 @@ model = genai.GenerativeModel(
   - The number of multiple-choice questions (MCQs) and subjective questions.
   - The students' grade level.
   - The desired difficulty level.
+  Return the questions in a JSON format, with each question having a 'question' key, 'options' key (for mcqs),'answer' key (for mcqs) where the answer should be the same string as the option, 'type' key where the value is either 'mcq' or 'subjective', 'grade' key, 'difficulty' key and 'topic' key. For mcqs, provide the options as a list of strings under the 'options' key.
   
   Additionally, provide constructive feedback for students' answers. When given a JSON file with a list of questions, correct answers (if applicable), and students' answers, analyze each question and provide feedback. For correct answers, explain why the answer is correct. For incorrect answers, offer constructive feedback on where the student went wrong and how to improve. For subjective questions, analyze the student's response and provide feedback accordingly.
   

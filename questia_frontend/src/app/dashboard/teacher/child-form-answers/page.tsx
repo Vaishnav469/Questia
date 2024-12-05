@@ -67,7 +67,7 @@ export default function QuizFeedback() {
                     <li
                       key={idx}
                       className={`px-3 py-2 rounded ${
-                        option.split(".")[0].trim() === q.answer[0]
+                        option === q.answer
                           ? "bg-green-100 text-green-700 font-bold"
                           : option === q.student_answer
                           ? "bg-red-100 text-red-700"

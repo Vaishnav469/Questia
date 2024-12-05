@@ -2,7 +2,7 @@ from flask import request, jsonify
 from flask_cors import cross_origin
 from app import db
 from models import Teacher, Student, TeacherProfile, ChildProfile, Classroom, Form, FormAnswer
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
+from flask_jwt_extended import create_access_token
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import timedelta
 import json
@@ -49,7 +49,7 @@ def register_routes(app):
             db.session.add(new_user)
             db.session.commit()
 
-            profile = TeacherProfile(uid=new_user.id, email=new_user.email)
+            profile = TeacherProfile(uid=new_user.id, email=new_user.email, classrooms_created=[], forms_created=[])
             db.session.add(profile)
             db.session.commit()
             
@@ -62,7 +62,7 @@ def register_routes(app):
             db.session.add(new_user)
             db.session.commit()
             
-            profile = ChildProfile(uid=new_user.id, email=new_user.email)
+            profile = ChildProfile(uid=new_user.id, email=new_user.email, classrooms_access=[])
             db.session.add(profile)
             db.session.commit()
         else:
@@ -113,7 +113,7 @@ def register_routes(app):
             if teacher_profile.classrooms_created is None: 
                 teacher_profile.classrooms_created = []
 
-            classroom = Classroom(title=title, description=desciption, unique_code=unique_code, teacher_uid=teacher_id)
+            classroom = Classroom(title=title, description=desciption, unique_code=unique_code, teacher_uid=teacher_id, children_access=[], form_uids=[])
             db.session.add(classroom)
             db.session.commit()
 
@@ -461,6 +461,3 @@ def register_routes(app):
             'title': form.title,
             'Questions': form.questions
         }), 200
-
-
-

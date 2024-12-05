@@ -5,17 +5,20 @@ from flask_jwt_extended import JWTManager, create_access_token
 from config import Config
 from flask_cors import CORS
 from datetime import timedelta
+import os
 
 
 db = SQLAlchemy()
 migrate = Migrate()
 jwt = JWTManager()
 
+JWT_KEY = os.environ.get('JWT_KEY')
+
 def create_app():
     app = Flask(__name__)
     CORS(app)
     app.config.from_object(Config)
-    app.config["JWT_SECRET_KEY"] = "Rk1IU0NKbFJXa2hpRzJ0NUNZYVlNOUU4a2hxR3A4dzY="
+    app.config["JWT_SECRET_KEY"] =  JWT_KEY
     
     # Initialize db, migrate, and jwt
     db.init_app(app)
