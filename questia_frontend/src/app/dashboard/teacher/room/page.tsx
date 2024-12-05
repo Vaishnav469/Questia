@@ -49,7 +49,7 @@ const page = () => {
             {classdata.students.length != 0 &&
               <div className="pt-10">
                 <div className="px-4">
-                  <div className=" flex w-fit flex-col gap-y-4 rounded-2xl border-2 border-[#8E77DB] bg-[#313030] p-10 px-16 text-[#F1E5FF]"> 
+                  <div className=" flex flex-col gap-y-4 rounded-2xl border-2 border-[#8E77DB] bg-[#313030] p-10 px-16 text-[#F1E5FF]"> 
                     <p className="text-xl">Students</p>
                     <div className="flex flex-col gap-y-4">
                       {classdata.students && classdata.students.map((student) => (

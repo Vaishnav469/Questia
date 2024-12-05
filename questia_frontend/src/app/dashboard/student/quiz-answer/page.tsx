@@ -91,7 +91,9 @@ const QuizAnswerPage = () => {
     };
 
     if (!form) {
-        return <h1>Form not found</h1>;
+        return (<div className="flex items-center justify-center">
+            <ThreeDots width="50" height="50" radius = "9" color="blue" />
+        </div>)
     }
 
     const currentQuestion = form.Questions[currentQuestionIndex];

@@ -49,7 +49,7 @@ export default function QuizFeedback() {
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
         <h1 className="text-2xl font-bold text-purple-700">{form.title}</h1>
-        <p className="text-gray-600 mt-2">Review your quiz performance below:</p>
+        <p className="text-gray-600 mt-2">Review the child's Quiz performance below:</p>
 
         <div className="mt-6">
           {form.Questions.map((q, index) => (
@@ -82,7 +82,7 @@ export default function QuizFeedback() {
               {q.type !== "mcq" && (
                 <div className="mt-2">
                   <p>
-                    <strong className="text-black">Your Answer:</strong>{" "}
+                    <strong className="text-black">Child's Answer:</strong>{" "}
                     <span
                       className={`${
                         q.student_answer === q.answer
@@ -96,8 +96,8 @@ export default function QuizFeedback() {
                 </div>
               )}
               <div className="mt-4">
-                <p className="text-gray-600">
-                  <strong>Feedback:</strong> {q.feedback || "No feedback given."}
+               <p className="text-gray-600">
+                  <strong>Feedback Given to Student by Us:</strong> {q.feedback || "No feedback given."}
                 </p>
               </div>
             </div>

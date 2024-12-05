@@ -1,8 +1,10 @@
 "use client"
-import { FormData, Question } from "@/lib/types";
+import { FormData } from "@/lib/types";
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { fetchformdata } from "@/apiService";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { ThreeDots } from 'react-loader-spinner'
 
 const page = () => {
@@ -82,16 +84,18 @@ const page = () => {
             {formdata.students.length != 0 &&
               <div className="pt-10">
                 <div className="px-4">
-                  <div className=" flex w-fit flex-col gap-y-4 rounded-2xl border-2 border-[#8E77DB] bg-[#313030] p-10 px-16 text-[#F1E5FF]"> 
+                  <div className=" flex flex-col gap-y-4 rounded-2xl border-2 border-[#8E77DB] bg-[#313030] p-10 px-16 text-[#F1E5FF]"> 
                     <p className="text-xl">Students</p>
                     <div className="flex flex-col gap-y-4">
                       {formdata.students && formdata.students.map((student) => (
-                      <div 
-                        key={student.uid} 
-                        className="flex flex-wrap gap-y-2 rounded-2xl border-2 border-[#8E77DB] bg-[#F1E5FF] p-4 text-[#878787]"
-                        > 
-                          <h1 className="grow text-xl font-bold">{student.email}</h1> 
-                        </div>
+                        <Link key={student.uid} href={`/dashboard/teacher/child-form-answers?studentUid=${student.uid}&formUid=${formUid}`}> 
+                          <div 
+                          className="flex flex-wrap gap-y-2 rounded-2xl border-2 border-[#8E77DB] bg-[#F1E5FF] p-4 text-[#878787]"
+                          
+                          > 
+                            <h1 className="grow text-xl font-bold">{student.email}</h1> 
+                          </div>
+                        </Link>
                       ))}
                     </div>
                   </div>

@@ -271,7 +271,6 @@ def register_routes(app):
             student_uid = request.args.get('student_uid')  # UID passed from frontend
             form_uid = request.args.get('form_uid')
             questions = data.get('Questions')
-            print(questions)
 
             if not form_uid or not student_uid or not questions:
                 return jsonify({"message": "Invalid data provided."}), 400
@@ -285,7 +284,6 @@ def register_routes(app):
             feedback_data = feedback_response.json()
             updated_questions = feedback_data.get('questions')
 
-            print(updated_questions)
             form_answer = FormAnswer(
                 form_uid=form_uid,
                 student_uid=student_uid,
@@ -305,7 +303,6 @@ def register_routes(app):
                     form.attempted_students = attempted_students
                     db.session.commit()
 
-                print(f"After Update - Form UID {form_uid}, Attempted Students: {form.attempted_students}")
 
             return jsonify({'msg': 'Form answers submitted successfully'}), 201
         except Exception as e:
@@ -315,27 +312,24 @@ def register_routes(app):
 
     @app.route('/api/get_form_answers', methods=['GET'])
     def get_form_answers():
-        child_uid = request.args.get('child_uid')
+        student_uid = request.args.get('student_uid')
         form_uid = request.args.get('form_uid')
 
-        if not child_uid or not form_uid:
+        if not student_uid or not form_uid:
             return jsonify({'msg': 'Missing required fields'}), 400
+        
+        form = Form.query.get(form_uid)
 
-        form_answers = FormAnswer.query.filter_by(child_id=child_uid, form_id=form_uid).all()
+        form_answer = FormAnswer.query.filter_by(student_uid=student_uid, form_uid=form_uid).first()
 
-        if not form_answers:
+        if not form_answer:
             return jsonify({'msg': 'No form answers found'}), 404
 
-        response = [
-            {
-                'question': answer.questions,
-                'answer': answer.answers,
-                'feedback': answer.feedback
-            }
-            for answer in form_answers
-        ]
-
-        return jsonify(response), 200
+        return jsonify({
+            "title": form.title,
+            'uid': form.uid,
+            "Questions": form_answer.questions
+        }), 200
     
     @app.route('/api/classroom/students', methods=['GET'])
     def get_classroom_students():
@@ -364,8 +358,6 @@ def register_routes(app):
         student_info = ChildProfile.query.filter(ChildProfile.uid.in_(classroom.children_access)).all()
 
         students = [{'uid': student.uid, 'email': student.email} for student in student_info]
-
-        print(classroom.uid, classroom.title, classroom.description, classroom.unique_code)
 
         return jsonify({
             'classroom': {
@@ -402,8 +394,6 @@ def register_routes(app):
         student_info = ChildProfile.query.filter(ChildProfile.uid.in_(form.attempted_students)).all()
 
         students = [{'uid': student.uid, 'email': student.email} for student in student_info]
-
-        print(form.uid, form.title, form.questions)
 
         return jsonify({
             'form': {

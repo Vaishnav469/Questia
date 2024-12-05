@@ -83,8 +83,6 @@ class FormAnswer(db.Model):
     form_uid = db.Column(db.Integer, db.ForeignKey('forms.uid'), nullable=False)
     student_uid = db.Column(db.Integer, db.ForeignKey('child_profiles.uid'), nullable=False)
     questions = db.Column(db.JSON, nullable=False)
-    answers = db.Column(db.JSON, nullable=False)  # JSON to store question answers
-    feedback = db.Column(db.JSON, nullable=True)  # AI-generated feedback
 
     def __repr__(self):
         return f'<FormAnswer Form: {self.form_uid} - Student: {self.student_uid}>'
