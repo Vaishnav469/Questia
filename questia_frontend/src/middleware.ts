@@ -15,7 +15,6 @@ export async function middleware(request: NextRequest) {
     const id = decodedToken.payload.id;
 
     if (request.nextUrl.pathname === '/dashboard') {
-        console.log(role)
       if (role === 'student') {
         return NextResponse.rewrite(new URL('/dashboard/student', request.url));
       } else if (role === 'teacher') {

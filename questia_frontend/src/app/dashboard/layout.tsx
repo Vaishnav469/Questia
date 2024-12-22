@@ -8,6 +8,8 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { jwtVerify } from "jose";
 
+require('dotenv').config();
+
 const layout = async ({ children }: { children: React.ReactNode }) => {
   const cookieStore = await cookies();
   const token = cookieStore.get("auth-token")?.value;

@@ -19,7 +19,6 @@ const page = () => {
             setloading(true)
             try { 
                 const data = await fetchformdata(formUid); 
-                console.log("Fetched Data: ", data.form.Questions);
                 setformdata(data); 
             } catch (error) { 
                 console.error("Failed to fetch form:", error); 

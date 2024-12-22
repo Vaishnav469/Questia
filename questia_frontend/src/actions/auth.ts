@@ -6,6 +6,8 @@ type Action = {
   success: boolean;
   error?: string;
 };
+require('dotenv').config();
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 
 export async function loginAction(
   email: string,
@@ -14,7 +16,7 @@ export async function loginAction(
   try {
     const cookieStore = await cookies();
 
-    const backendResponse = await fetch(`http://192.168.70.47:8000/api/login`, {
+    const backendResponse = await fetch(`${BACKEND_URL}/api/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -47,7 +49,7 @@ export async function registerAction(
 ): Promise<Action> {
   try {
     const backendResponse = await fetch(
-      `http://192.168.70.47:8000/api/signup`,
+      `${BACKEND_URL}/api/signup`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

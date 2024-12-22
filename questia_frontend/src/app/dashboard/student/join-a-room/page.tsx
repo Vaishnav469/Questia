@@ -12,6 +12,7 @@ const page = () => {
   const [loading, setloading] = useState(false)
   const [code, setCode] = useState<string>("");
   const [studentUid, setStudentUid] = useState<string | null>(null);
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 
   useEffect(() => {
     const uid = searchParams.get('studentUid'); 
@@ -21,7 +22,7 @@ const page = () => {
     const joinclassroom = async () => {
         setloading(true)
         try {
-            const response = await fetch(`http://192.168.70.47:8000/api/classroom_join`, { 
+            const response = await fetch(`${BACKEND_URL}/api/classroom_join`, { 
                 method: 'POST', headers: { 
                     'Content-Type': 'application/json', 
                 }, body: JSON.stringify({ student_uid: studentUid, code: code}),
@@ -32,7 +33,6 @@ const page = () => {
             } 
 
             const data = await response.json(); 
-            console.log("Form created:", data.form_id); 
             router.push(`/dashboard/student/`); 
         } catch (error) {
             console.error("Error creating form:", error); 

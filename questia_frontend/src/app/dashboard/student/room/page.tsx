@@ -16,19 +16,19 @@ const ClassroomForms = () => {
     const [loading, setloading] = useState(false)
     const [pendingforms, setPendingForms] = useState<Form[]>([]);
     const [attemptedforms, setAttemptedForms] = useState<Form[]>([]);
+    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 
     useEffect(() => {
         const fetchforms = async () => {
             setloading(true)
             try { 
-                const res = await fetch(`http://192.168.70.47:8000/api/get_student_forms?classroomUid=${classroom_uid}&studentUid=${student_uid}`);
+                const res = await fetch(`${BACKEND_URL}/api/get_student_forms?classroomUid=${classroom_uid}&studentUid=${student_uid}`);
                 if (!res.ok) { 
                     throw new Error("Failed to fetch forms"); 
                 } 
                 const data = await res.json();
                 setAttemptedForms(data.attempted_forms);
                 setPendingForms(data.pending_forms);
-                console.log(attemptedforms, pendingforms);
               } catch (error) { 
                 console.error("Error fetching classrooms:", error); 
               } finally {

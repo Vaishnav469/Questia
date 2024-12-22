@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+require('dotenv').config();
 
 import { Pencil1Icon, TrashIcon, DotsVerticalIcon } from "@radix-ui/react-icons";
 
@@ -40,11 +41,12 @@ const FormItem = ({
 }) => {
   const [classrooms, setClassrooms] = useState<{ uid: string; title: string }[]>([]); 
   const [showDropdown, setShowDropdown] = useState(false);
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 
-  useEffect(() => { 
+  useEffect(() => {
     const fetchClassrooms = async () => { 
       try { 
-        const res = await fetch(`http://192.168.70.47:8000/api/teacher-classrooms?teacher_uid=${teacherUid}`); 
+        const res = await fetch(`${BACKEND_URL}/api/teacher-classrooms?teacher_uid=${teacherUid}`); 
         if (!res.ok) { 
           throw new Error("Failed to fetch classrooms"); 
         } const data = await res.json(); setClassrooms(data); 
@@ -57,7 +59,7 @@ const FormItem = ({
   const handleGrantAccess = async (classroomUid: string) => { 
     setShowDropdown(false);
     try { 
-      const res = await fetch("http://192.168.70.47:8000/api/give_access_to_form", { 
+      const res = await fetch(`${BACKEND_URL}/api/give_access_to_form`, { 
         method: "POST", headers: { 
           "Content-Type": "application/json", 
         }, body: JSON.stringify({ form_uid: form.uid, classroom_uid: classroomUid }), 
@@ -66,7 +68,6 @@ const FormItem = ({
         throw new Error("Failed to grant access to form"); 
       } 
       const data = await res.json(); 
-      console.log("Access granted:", data); 
     } catch (error) { 
       console.error("Error granting access to form:", error); 
     } 

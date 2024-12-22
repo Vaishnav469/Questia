@@ -24,6 +24,7 @@ const page = () => {
   const [teacherUid, setTeacherUid] = useState<string | null>(null);
   const [title, setTitle] = useState<string>("");
   const [loading, setloading] = useState(false)
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   useEffect(() => {
     const uid = searchParams.get('teacherUid'); 
@@ -33,7 +34,7 @@ const page = () => {
   const handleGenerate = async () => {
     setloading(true)
     try { 
-      const res = await fetch("http://192.168.70.47:8000/quiz/generate_quiz", { 
+      const res = await fetch(`${BACKEND_URL}/quiz/generate_quiz`, { 
         method: "POST", headers: { 
           "Content-Type": "application/json", 
         }, body: JSON.stringify({ 
@@ -70,7 +71,7 @@ const page = () => {
     if (!response) return;
     setloading(true)
     try { 
-      const res = await fetch("http://192.168.70.47:8000/api/create_form", { 
+      const res = await fetch(`${BACKEND_URL}/api/create_form`, { 
         method: "POST", headers: { 
           "Content-Type": "application/json", 
         }, body: JSON.stringify({ teacher_uid: teacherUid, title: title, questions: response.questions, }), 
@@ -81,7 +82,6 @@ const page = () => {
       } 
       
       const data = await res.json(); 
-      console.log("Form created:", data.form_id); 
       router.push(`/dashboard/teacher/forms-list?teacherUid=${teacherUid}`); 
     } catch (error) { 
       console.error("Error creating form:", error); 

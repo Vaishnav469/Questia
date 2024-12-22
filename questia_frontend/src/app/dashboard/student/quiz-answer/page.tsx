@@ -14,12 +14,13 @@ const QuizAnswerPage = () => {
     const [form, setForm] = useState<Form | null>(null);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [loading, setLoading] = useState(false);
+    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 
     useEffect(() => {
         const fetchForm = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`http://192.168.70.47:8000/api/student_form?form_uid=${formUid}`);
+                const response = await fetch(`${BACKEND_URL}/api/student_form?form_uid=${formUid}`);
                 const data = await response.json();
 
                 const updatedQuestions = data.Questions.map((q) => ({
@@ -70,7 +71,7 @@ const QuizAnswerPage = () => {
     const handleSubmit = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`http://192.168.70.47:8000/api/submit_form_answers?student_uid=${studentUid}&form_uid=${formUid}`, {
+            const response = await fetch(`${BACKEND_URL}/api/submit_form_answers?student_uid=${studentUid}&form_uid=${formUid}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

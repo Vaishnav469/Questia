@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from 'next/navigation';
-
+import { ThreeDots } from "react-loader-spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { generateRandomString } from "@/lib/utils";
@@ -16,6 +16,8 @@ const page = () => {
   const [roomName, setRoomName] = useState<string>("");
   const [roomDesc, setRoomDesc] = useState<string>("");
   const [teacherUid, setTeacherUid] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  
 
   useEffect(() => {
     setCode(generateRandomString(6));
@@ -37,6 +39,7 @@ const page = () => {
         console.error('Teacher UID is not available'); 
       return; 
     }
+    setLoading(true);
     try { 
       const classroomData = { 
         title: roomName, 
@@ -46,12 +49,14 @@ const page = () => {
       };
 
       const result = await createClassroom(classroomData);
-      console.log('Classroom created:', result.classroom_id); 
+     
       
       router.push(`/dashboard/teacher/rooms-list?teacherUid=${teacherUid}`); 
     } catch (error) { 
       console.error('Error creating classroom:', error); 
-    } 
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -89,14 +94,19 @@ const page = () => {
           </div>
         </div>
 
-        <Button
+        {loading ? (
+          <div className="flex items-center justify-center">
+            <ThreeDots width="50" height="50" radius="9" color="blue" />
+          </div>
+        ) : <Button
           variant={"project"}
           size={"lg"}
           className="mt-5 border-2 border-[#D9D9D9] font-semibold"
           type="submit"
         >
           Create Room
-        </Button>
+        </Button>}
+        
       </div>
     </form>
   );

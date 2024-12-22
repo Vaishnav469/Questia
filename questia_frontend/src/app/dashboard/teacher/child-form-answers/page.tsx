@@ -5,6 +5,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Form } from "@/lib/types";
 import { ThreeDots } from "react-loader-spinner";
 
+
+
 export default function QuizFeedback() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -12,13 +14,14 @@ export default function QuizFeedback() {
   const studentUid = searchParams.get('studentUid'); // Get formUid and studentUid from query params
   const [form, setForm] = useState<Form | null>(null);
   const [loading, setloading] = useState(false)
-
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+  
   useEffect(() => {
     const fetchformanswer = async () => {
         setloading(true);
         try {
             // Fetch data from the backend
-            const response = await fetch(`http://192.168.70.47:8000/api/get_form_answers?student_uid=${studentUid}&form_uid=${formUid}`)
+            const response = await fetch(`${BACKEND_URL}/api/get_form_answers?student_uid=${studentUid}&form_uid=${formUid}`)
                
             const data = await response.json();
 

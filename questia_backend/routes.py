@@ -128,7 +128,6 @@ def register_routes(app):
             else:
                 return jsonify({'msg': 'Form already has access to classroom'}), 200
         except Exception as e: 
-            print(f'Error creating classroom: {e}') 
             return jsonify({'msg': 'Failed to create classroom', 'error': str(e)}), 500
 
     @app.route('/api/classroom_join', methods=['POST'])
@@ -306,7 +305,6 @@ def register_routes(app):
 
             return jsonify({'msg': 'Form answers submitted successfully'}), 201
         except Exception as e:
-            print(f"Error: {e}")
             return jsonify({"message": "An error occurred while submitting the form."}), 500
 
 
