@@ -8,3 +8,4 @@ cryptography
 requests
 Flask-Cors
 Google
+google-generativeai
