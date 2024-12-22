@@ -6,3 +6,4 @@ python-dotenv
 Flask-JWT-Extended
 cryptography
 requests
+flask_cors
