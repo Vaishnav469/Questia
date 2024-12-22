@@ -1,5 +1,4 @@
 "use client"
-import RoomInterface from "@/components/dashboard/room-interface";
 import { ClassData } from "@/lib/types";
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
