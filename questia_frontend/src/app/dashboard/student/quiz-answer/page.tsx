@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Form } from "@/lib/types";
 import { ThreeDots } from "react-loader-spinner";
@@ -111,7 +111,7 @@ const QuizAnswerPage = () => {
                     <p className=" text-black mt-2">{currentQuestion.question}</p>
                     {currentQuestion.type === "mcq" && (
                         <div className="options-container mt-4">
-                            {currentQuestion.options.map((option, index) => (
+                            {currentQuestion.options.map((option: string, index: Key | null | undefined) => (
                                 <button
                                     key={index}
                                     className={`option-button rounded p-2 m-1 ${
