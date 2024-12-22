@@ -61,7 +61,7 @@ const QuizAnswerPage = () => {
     };
 
     const handleNext = () => {
-        if (currentQuestionIndex < form.Questions.length - 1) {
+        if (form && currentQuestionIndex < form.Questions.length - 1) {
             setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
         } else {
             handleSubmit();

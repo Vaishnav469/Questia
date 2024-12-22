@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Form } from "@/lib/types";
 import { ThreeDots } from "react-loader-spinner";
@@ -55,17 +55,18 @@ export default function QuizFeedback() {
         <p className="text-gray-600 mt-2">Review the child's Quiz performance below:</p>
 
         <div className="mt-6">
-          {form.Questions.map((q, index) => (
+          {form.Questions.map((q: { question: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; type: string; options: (string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | ReactPortal | Promise<AwaitedReactNode> | Iterable<ReactNode> | null | undefined)[]; answer: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | ReactPortal | Promise<AwaitedReactNode> | Iterable<ReactNode> | null | undefined; student_answer: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | ReactPortal | Promise<AwaitedReactNode> | Iterable<ReactNode> | null | undefined; feedback: any; }, index: number | null | undefined) => (
             <div
               key={index}
               className="p-4 my-4 border rounded-lg bg-gray-50 shadow-sm"
             >
-              <h2 className="text-lg font-medium text-gray-800">
+              {index && <h2 className="text-lg font-medium text-gray-800">
                 Question {index + 1}: {q.question}
-              </h2>
+              </h2>}
+              
               {q.type === "mcq" && q.options && (
                 <ul className="mt-2 space-y-2">
-                  {q.options.map((option, idx) => (
+                  {q.options.map((option: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined, idx: Key | null | undefined) => (
                     
                     <li
                       key={idx}

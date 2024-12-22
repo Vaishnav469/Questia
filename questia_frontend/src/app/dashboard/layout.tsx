@@ -26,14 +26,14 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
     return (
       <div className="flex">
         {role === "teacher" &&  
-        <TeacherSideNav uid={decodedToken.payload.uid}/>}
+        <TeacherSideNav uid={decodedToken.payload.uid as string}/>}
         <main className="flex-1">
           {role === "teacher" ? <MarginWidthWrapper> 
             <Navbar role={role} />
             <PageWrapper>{children}</PageWrapper>
           </MarginWidthWrapper>
           :
-          <> <Navbar role={role} /> 
+          <> <Navbar role={role as string} /> 
           <PageWrapper>{children}</PageWrapper> 
           </>}
           

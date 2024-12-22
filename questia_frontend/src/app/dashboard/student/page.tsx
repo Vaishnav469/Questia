@@ -21,7 +21,7 @@ const page = async () => {
 
     return (
       <div className="p-4">
-        <StudentDashboard studentUid={decodedToken.payload.uid}/>
+        <StudentDashboard studentUid={decodedToken.payload.uid as string}/>
       </div>
      
     );

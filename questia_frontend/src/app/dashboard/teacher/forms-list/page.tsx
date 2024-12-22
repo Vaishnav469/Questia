@@ -58,7 +58,7 @@ const FormsListPage = () => {
           </Button>
           </Link>
         </div>
-        <FormsList forms={forms} role="teacher" teacherUid={teacherUid} />
+        <FormsList forms={forms} role="teacher" teacherUid={teacherUid as string} />
       </div>)
     );
 };

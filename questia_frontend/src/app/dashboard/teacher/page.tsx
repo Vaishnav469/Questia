@@ -23,7 +23,7 @@ const page = async () => {
 
     return (
       <div className="p-4">
-        <TeacherDashboard teacherUid={decodedToken.payload.uid} />
+        <TeacherDashboard teacherUid={decodedToken.payload.uid as string} />
       </div>
     );
   } catch (error) {

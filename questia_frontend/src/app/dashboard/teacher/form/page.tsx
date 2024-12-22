@@ -45,7 +45,7 @@ const page = () => {
                 style={{ maxHeight: '82vh', overflowY: 'scroll', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 <div className="pt-5"> 
                     <h3>Questions:</h3> 
-                    <ul> {formdata.form.Questions.map((q, index) => ( 
+                    <ul> {formdata.form.Questions.map((q: { question: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; options: (string | number | bigint | boolean | React.ReactPortal | Promise<React.AwaitedReactNode> | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined)[]; type: string; answer: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }, index: React.Key | null | undefined) => ( 
                         <li key={index} className="py-3"> 
                         <p>Q:</p>
                             <div  className="w-full p-8 border rounded-md resize-none overflow-hidden" 
@@ -55,7 +55,7 @@ const page = () => {
                         
                         {q.options && 
                             (<ul className="pl-4">
-                            {q.options.map((option, idx) => (
+                            {q.options.map((option: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined, idx: React.Key | null | undefined) => (
                                 <li key={idx} className="flex items-center gap-2">
                                     <div className="border p-6 w-fit" >
                                         {option}
