@@ -23,7 +23,7 @@ const QuizAnswerPage = () => {
                 const response = await fetch(`${BACKEND_URL}/api/student_form?form_uid=${formUid}`);
                 const data = await response.json();
 
-                const updatedQuestions = data.Questions.map((q) => ({
+                const updatedQuestions = data.Questions.map((q: any) => ({
                     ...q,
                     student_answer: null, // Initialize with null
                 }));

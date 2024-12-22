@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Form } from "@/lib/types";
 import { ThreeDots } from "react-loader-spinner";
@@ -53,7 +53,7 @@ export default function QuizFeedback() {
         <p className="text-gray-600 mt-2">Review your quiz performance below:</p>
 
         <div className="mt-6">
-          {form.Questions.map((q, index) => (
+          {form.Questions.map((q: { question: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; type: string; options: any[]; answer: any; student_answer: any; feedback: any; }, index: number) => (
             <div
               key={index}
               className="p-4 my-4 border rounded-lg bg-gray-50 shadow-sm"
