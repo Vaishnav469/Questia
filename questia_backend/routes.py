@@ -294,11 +294,12 @@ def register_routes(app):
             # Update form record to show this student attempted
             form = Form.query.get(form_uid)
             if form:
-                attempted_students = form.attempted_students or []
+                attempted_students = set(form.attempted_students)
                 student_uid = int(student_uid)
 
                 if student_uid not in attempted_students:
-                    attempted_students.append(student_uid)
+
+                    attempted_students.add(student_uid)
                     form.attempted_students = attempted_students
                     db.session.commit()
 
