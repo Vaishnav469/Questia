@@ -74,6 +74,6 @@ def provide_feedback():
   try: 
     updated_questions = json.loads(updated_questions_json) 
   except json.JSONDecodeError: 
-    return jsonify({'error': 'Invalid JSON response from AI'}), 500
+    return jsonify({'error': 'Invalid JSON response from AI'}), 600
 
   return jsonify({'questions': updated_questions})

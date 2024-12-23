@@ -278,7 +278,7 @@ def register_routes(app):
             feedback_response = requests.post(FEEDBACK_SERVICE_URL, json=feedback_payload)
 
             if feedback_response.status_code != 200:
-                return jsonify({"message": "Failed to generate feedback."}), 500
+                return jsonify({"message": "Failed to generate feedback."}), 300
             
             feedback_data = feedback_response.json()
             updated_questions = feedback_data.get('questions')
@@ -305,7 +305,7 @@ def register_routes(app):
 
             return jsonify({'msg': 'Form answers submitted successfully'}), 201
         except Exception as e:
-            return jsonify({"message": "An error occurred while submitting the form."}), 500
+            return jsonify({"message": "An error occurred while submitting the form."}), 100
 
 
     @app.route('/api/get_form_answers', methods=['GET'])
