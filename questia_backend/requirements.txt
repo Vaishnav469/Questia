@@ -9,3 +9,4 @@ requests
 Flask-Cors
 Google
 google-generativeai
+gunicorn
