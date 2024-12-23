@@ -13,7 +13,7 @@ const page = async () => {
     redirect("/login");
   }
   try {
-    const decodedToken = await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET));
+    const decodedToken = await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET_KEY));
 
     if (decodedToken.payload.role !== "student") {
       redirect("/login");

@@ -21,7 +21,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
   }
   
   try {
-    const decodedToken = await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET));
+    const decodedToken = await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET_KEY));
     const role = decodedToken.payload.role
     return (
       <div className="flex">

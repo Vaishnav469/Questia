@@ -10,7 +10,7 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    const decodedToken = await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET));
+    const decodedToken = await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET_KEY));
     const role = decodedToken.payload.role;
     const id = decodedToken.payload.id;
 
