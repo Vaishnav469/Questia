@@ -1,11 +1,24 @@
 import Image from "next/image";
+import { useEffect } from "react";
 import Link from "next/link";
 
 
 import Navbar from "@/components/home/navbar";
 import { Button } from "@/components/ui/button";
 
+
+
 export default function Home() {
+  useEffect(() => {
+    const cookiesEnabled = navigator.cookieEnabled;
+
+    if (!cookiesEnabled) {
+      alert(
+        "Please enable cookies in your browser settings, including third-party cookies, to proceed."
+      );
+    }
+  }, []);
+
   return (
     <div className="relative">
       <Image
