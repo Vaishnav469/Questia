@@ -6,7 +6,7 @@ Questia is a classroom management and assessment platform designed to empower te
 
 ## Demo 🎥
 
-Watch the demo of Questia in action [here](https://youtu.be/wK7YNuKMqyk).
+Watch the demo of Questia in action [here](https://youtu.be/wK7YNuKMqyk) or visit the website [here](https://www.questia.live).
 
 ---
 
