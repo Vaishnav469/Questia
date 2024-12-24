@@ -42,10 +42,10 @@ The inspiration for Questia stems from the need for a streamlined, technology-dr
 
 ## How We Built It
 
-- 🌐 **Frontend:** Next.js and Tailwind CSS for a responsive and interactive user interface.
-- 🖥️ **Backend:** Flask framework for handling API requests and business logic.
+- 🖥️ **Frontend:** Next.js and Tailwind CSS for a responsive and interactive user interface.
+- 🌐 **Backend:** Flask framework for handling API requests and business logic.
 - 💾 **Database:** NeonDB for managing user profiles, classrooms, assignments, and answers.
-- 🤖 **AI Integration:** Gemini for generating questions, evaluating subjective answers, and providing feedback.
+- 🧠 **AI Integration:** Gemini for generating questions, evaluating subjective answers, and providing feedback.
 - 🔄 **Version Control:** GitHub for collaborative development and version management.
 
 ---
@@ -68,16 +68,6 @@ The inspiration for Questia stems from the need for a streamlined, technology-dr
 3. 🧑‍👩‍👦 **Parent Dashboard:** Introduce a parent dashboard for monitoring student progress and performance.
 4. 🌍 **Localization:** Expand language support to make Questia accessible to a global audience.
 5. 📑 **Exam Environment:** Create a exam environment when the student attempts the assignment by not letting them open other tabs and having a timer.
-
----
-
-## 💻🔧 Technologies Used
-
-- 🖥️ **Frontend:** Next.js, Tailwind CSS
-- 🔧 **Backend:** Flask
-- 🗄️ **Database:** NeonDB
-- 🧠**AI Integration:** Gemini
-- 🌐 **Version Control:** Git & GitHub
 
 ---
 
