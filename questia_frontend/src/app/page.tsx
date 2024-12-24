@@ -36,31 +36,28 @@ export default function Home() {
           </h1>
 
           <h1 className="max-w-xl text-black pt-5 text-3xl font-bold">
-            Your Personalized Learning & Quiz Platform
+            Your Personalized Teaching and Learning Platform
           </h1>
 
           <p className="max-w-2xl text-black">
-            A platform designed to make learning interactive, engaging, and
-            impactful. Here, you'll have access to quizzes that challenge your
-            knowledge, help reinforce what you've learned, and give you instant
-            feedback to boost your understanding.
+            A platform designed to empower teachers and students through AI-driven tools. 
+            Teachers can create classrooms, generate assignments with AI assistance, and provide 
+            instant feedback to students, while students can seamlessly access and review their assignments 
+            in a structured, interactive environment.
           </p>
 
           <div className="flex flex-wrap justify-center gap-x-10 gap-y-4">
             <div className="flex flex-col items-center justify-between gap-x-16 text-pretty rounded-xl border-2 border-[#F1E5FF] bg-[#313030] p-8 text-xl">
-              <p>Join or Create</p>
-              <p>Quiz Rooms</p>
+              <p>Create or Join</p>
+              <p>Class Rooms</p>
             </div>
             <div className="flex flex-col items-center justify-between gap-x-16 text-pretty rounded-xl border-2 border-[#F1E5FF] bg-[#313030] p-8 text-xl">
-              <p>Take Quizzes and</p>
-              <p>edit them later</p>
+              <p>Assign or Take</p>
+              <p>Assignments</p>
             </div>
-            <div className="flex flex-col items-center justify-between gap-x-16 text-pretty rounded-xl border-2 border-[#F1E5FF] bg-[#313030] p-4 text-xl">
-              <p className="rounded-2xl bg-[#8638E5] px-2 text-xs">
-                Coming Soon
-              </p>
-              <p>Track your</p>
-              <p>Progress Anytime</p>
+            <div className="flex flex-col items-center justify-between gap-x-16 text-pretty rounded-xl border-2 border-[#F1E5FF] bg-[#313030] p-8 text-xl">
+              <p>Track or Receive</p>
+              <p>Instant Feedback</p>
             </div>
           </div>
 
